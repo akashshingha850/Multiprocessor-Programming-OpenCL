@@ -49,7 +49,7 @@ const char *kernel_source =
 "output[12]='\\0';"
 "}";
 
-// Get CUDA Information 
+// Get OpenCL CUDA Information 
 int opencl_cuda_info() {
     #define MAX_INFO_SIZE 1024 
     cl_platform_id platform;
