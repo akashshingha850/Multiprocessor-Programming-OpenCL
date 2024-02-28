@@ -3,7 +3,7 @@
 
 #define MAX_INFO_SIZE 1024
 
-int main() {
+int cuda_info() {
     cl_platform_id platform;
     cl_device_id device;
     cl_uint num_platforms, num_devices;
@@ -40,4 +40,9 @@ int main() {
     printf("OpenCL Device Compute Units: %u\n", num_compute_units);
 
     return 0;
+}
+
+int main ()
+{
+    cuda_info();
 }

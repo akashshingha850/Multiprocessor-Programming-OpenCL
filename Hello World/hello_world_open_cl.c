@@ -31,7 +31,6 @@ install intel-opencl-icd
 //
 #include <CL/cl.h>
 
-
 //This is a kernel, a piece of code intended to be executed in a GPU or CPU
 const char *kernel_source =
 "__kernel void hello(__global char *output) {"
@@ -49,6 +48,49 @@ const char *kernel_source =
 "output[11]='d';"
 "output[12]='\\0';"
 "}";
+
+// Get CUDA Information 
+int cuda_info() {
+    #define MAX_INFO_SIZE 1024 
+    cl_platform_id platform;
+    cl_device_id device;
+    cl_uint num_platforms, num_devices;
+
+    // Get the number of OpenCL platforms
+    clGetPlatformIDs(1, &platform, &num_platforms);
+
+    // Get the platform name
+    char platform_name[MAX_INFO_SIZE];
+    clGetPlatformInfo(platform, CL_PLATFORM_NAME, MAX_INFO_SIZE, platform_name, NULL);
+    printf("OpenCL Platform: %s\n", platform_name);
+
+    // Get the platform version
+    char platform_version[MAX_INFO_SIZE];
+    clGetPlatformInfo(platform, CL_PLATFORM_VERSION, MAX_INFO_SIZE, platform_version, NULL);
+    printf("OpenCL Platform Version: %s\n", platform_version);
+
+    // Get the number of OpenCL devices
+    clGetDeviceIDs(platform, CL_DEVICE_TYPE_ALL, 1, &device, &num_devices);
+
+    // Get the device name
+    char device_name[MAX_INFO_SIZE];
+    clGetDeviceInfo(device, CL_DEVICE_NAME, MAX_INFO_SIZE, device_name, NULL);
+    printf("OpenCL Device: %s\n", device_name);
+
+    // Get the device version
+    char device_version[MAX_INFO_SIZE];
+    clGetDeviceInfo(device, CL_DEVICE_VERSION, MAX_INFO_SIZE, device_version, NULL);
+    printf("OpenCL Device Version: %s\n", device_version);
+
+    // Get the number of compute units
+    cl_uint num_compute_units;
+    clGetDeviceInfo(device, CL_DEVICE_MAX_COMPUTE_UNITS, sizeof(cl_uint), &num_compute_units, NULL);
+    printf("OpenCL Device Compute Units: %u\n", num_compute_units);
+
+    return 0;
+}
+
+
 
 //The rest of the code is intended to be executed in the host
 int main()
@@ -71,6 +113,7 @@ int main()
     int num_max_platforms = 1;
     err = clGetPlatformIDs(num_max_platforms, NULL, &num_platforms);
     printf("Num platforms detected: %d\n", num_platforms);
+    cuda_info();
 
     platforms = (cl_platform_id*) malloc(sizeof(cl_platform_id) * num_platforms);
     err = clGetPlatformIDs(num_max_platforms, platforms, &num_platforms);
@@ -113,6 +156,7 @@ int main()
     //
     err = clEnqueueReadBuffer(queue, output, CL_TRUE, 0, 13 * sizeof(char), result, 0, NULL, NULL);
     printf("***%s***", result);
+
 
 
     //Free your memory please....
