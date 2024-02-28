@@ -50,7 +50,7 @@ const char *kernel_source =
 "}";
 
 // Get CUDA Information 
-int cuda_info() {
+int opencl_cuda_info() {
     #define MAX_INFO_SIZE 1024 
     cl_platform_id platform;
     cl_device_id device;
@@ -113,7 +113,7 @@ int main()
     int num_max_platforms = 1;
     err = clGetPlatformIDs(num_max_platforms, NULL, &num_platforms);
     printf("Num platforms detected: %d\n", num_platforms);
-    cuda_info();
+    opencl_cuda_info();
 
     platforms = (cl_platform_id*) malloc(sizeof(cl_platform_id) * num_platforms);
     err = clGetPlatformIDs(num_max_platforms, platforms, &num_platforms);
