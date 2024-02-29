@@ -39,8 +39,9 @@ int main() {
 
     long seconds = (end.tv_sec - start.tv_sec);
     long micros = ((seconds * 1000000) + end.tv_usec) - (start.tv_usec);
+    float millis = micros / 1000.0; // Convert microseconds to milliseconds
 
-    printf("Host Execution Time: %ld ms\n", micros/1000);
+    printf("Host Execution Time: %.2f ms\n", millis); // Print with 2 decimal places
 
     // Cleanup
     free(matrix1);

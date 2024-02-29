@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <direct.h> // For _getcwd
 
 
 void ReadImage(const char* filename, unsigned char** image, unsigned* width, unsigned* height) {
@@ -37,7 +36,7 @@ void GrayScaleImage(const unsigned char* inputImage, unsigned inputWidth, unsign
         unsigned char r = inputImage[i * 4];
         unsigned char g = inputImage[i * 4 + 1];
         unsigned char b = inputImage[i * 4 + 2];
-        (*outputImage)[i] = (unsigned char)(0.2126 * r + 0.7152 * g + 0.0722 * b);
+        (*outputImage)[i] = (unsigned char)(0.2126 * r + 0.7152 * g + 0.0722 * b);  // Y=0.2126R + 0.7152G + 0.0722B. 
     }
 }
 
@@ -46,7 +45,7 @@ void ApplyFilter(const unsigned char* grayImage, unsigned width, unsigned height
     *filteredImage = (unsigned char*)malloc(width * height);
     memset(*filteredImage, 0, width * height); // Initialize filtered image
 
-    // Simple averaging filter (not an accurate Gaussian blur)
+    // Simple averaging filter 
     for (unsigned y = 2; y < height - 2; y++) {
         for (unsigned x = 2; x < width - 2; x++) {
             unsigned sum = 0;
@@ -74,53 +73,52 @@ void ProfileFunction(void (*func)(const unsigned char*, unsigned, unsigned, unsi
     func(inputImage, inputWidth, inputHeight, outputImage);
     clock_t end = clock();
     double time_spent = (double)(end - start) / CLOCKS_PER_SEC;
-    printf("%s function execution time: %f seconds\n", funcName, time_spent);
+    printf("%s function execution time: %.2f seconds\n", funcName, time_spent);
 }
 
+
 int main() {
-    const char* inputFile = "D:/Mega/OULU/Multiprocessesor Proggramming/Projects/2. Image/im0.png";  //relative file path not working
+    const char* inputFile = "D:/Mega/OULU/Multiprocessesor Proggramming/Projects/2. Image/im0.png";
     unsigned char *image = NULL, *resizedImage = NULL, *grayImage = NULL, *filteredImage = NULL;
     unsigned width, height, resizedWidth = 0, resizedHeight = 0;
 
     clock_t start, end;
     double cpu_time_used;
 
-    printf("Current working directory: %s\n", _getcwd(NULL, 0));
-
     // Reading and decoding the image
     start = clock();
     ReadImage(inputFile, &image, &width, &height);
     end = clock();
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("ReadImage took %f seconds to execute \n", cpu_time_used);
+    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    printf("ReadImage took %.0f ms to execute \n", cpu_time_used);
 
     // Resizing the image
     start = clock();
     ResizeImage(image, width, height, &resizedImage, &resizedWidth, &resizedHeight);
     end = clock();
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("ResizeImage took %f seconds to execute \n", cpu_time_used);
+    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    printf("ResizeImage took %.0f ms to execute \n", cpu_time_used);
 
     // Converting to grayscale
     start = clock();
     GrayScaleImage(resizedImage, resizedWidth, resizedHeight, &grayImage);
     end = clock();
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("GrayScaleImage took %f seconds to execute \n", cpu_time_used);
+    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    printf("GrayScaleImage took %.0f ms to execute \n", cpu_time_used);
 
     // Applying the filter
     start = clock();
     ApplyFilter(grayImage, resizedWidth, resizedHeight, &filteredImage);
     end = clock();
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("ApplyFilter took %f seconds to execute \n", cpu_time_used);
+    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    printf("ApplyFilter took %.0f ms to execute \n", cpu_time_used);
 
     // Writing the resulting image
     start = clock();
-    WriteImage("D:/Mega/OULU/Multiprocessesor Proggramming/Projects/2. Image/im0_out.png", filteredImage, resizedWidth, resizedHeight);
+    WriteImage("D:/Mega/OULU/Multiprocessesor Proggramming/Projects/2. Image/image_0_bw.png", filteredImage, resizedWidth, resizedHeight);
     end = clock();
-    cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
-    printf("WriteImage took %f seconds to execute \n", cpu_time_used);
+    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    printf("WriteImage took %.0f ms to execute \n", cpu_time_used);
 
     // Cleanup
     free(image);
