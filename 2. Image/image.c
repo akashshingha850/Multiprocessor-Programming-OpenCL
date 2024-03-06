@@ -59,6 +59,8 @@ void ApplyFilter(const unsigned char* grayImage, unsigned width, unsigned height
     }
 }
 
+
+
 void WriteImage(const char* filename, const unsigned char* image, unsigned width, unsigned height) {
     unsigned error = lodepng_encode_file(filename, image, width, height, LCT_GREY, 8);
     if (error) {
@@ -78,7 +80,7 @@ void ProfileFunction(void (*func)(const unsigned char*, unsigned, unsigned, unsi
 
 
 int main() {
-    const char* inputFile = "D:/Mega/OULU/Multiprocessesor Proggramming/Projects/2. Image/im0.png";
+    const char* inputFile = "D:/Mega/OULU/Multiprocessesor Proggramming/Projects/2. Image/image_0.png";
     unsigned char *image = NULL, *resizedImage = NULL, *grayImage = NULL, *filteredImage = NULL;
     unsigned width, height, resizedWidth = 0, resizedHeight = 0;
 
@@ -88,8 +90,12 @@ int main() {
     // Reading and decoding the image
     start = clock();
     ReadImage(inputFile, &image, &width, &height);
+
     end = clock();
     cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    printf("Image width: %d \n",width);
+    printf("Image height: %d \n",height);
+    
     printf("ReadImage took %.0f ms to execute \n", cpu_time_used);
 
     // Resizing the image
@@ -109,6 +115,8 @@ int main() {
     // Applying the filter
     start = clock();
     ApplyFilter(grayImage, resizedWidth, resizedHeight, &filteredImage);
+    //ApplyGaussianFilter(grayImage, resizedWidth, resizedHeight, &filteredImage);
+
     end = clock();
     cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
     printf("ApplyFilter took %.0f ms to execute \n", cpu_time_used);

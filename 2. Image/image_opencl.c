@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <CL/cl.h>
+
+#define MAX_SOURCE_SIZE (0x100000)
+
+int main() {
+    // Load the kernel source code into a string
+    FILE *fp;
+    char *source_str;
+    size_t source_size;
+
+    fp = fopen("kernels.cl", "r");
+    if (!fp) {
+        fprintf(stderr, "Failed to load kernel.\n");
+        exit(1);
+    }
+
+    source_str = (char*)malloc(MAX_SOURCE_SIZE);
+    source_size = fread(source_str, 1, MAX_SOURCE_SIZE, fp);
+    fclose(fp);
+
+    // Define width and height of the image
+    const int width = 2940; // Example width
+    const int height = 2016; // Example height
+}
+/*
+    // Define input and output arrays
+    uchar4 *input = (uchar4*)malloc(sizeof(uchar4) * width * height); // Input image
+    uchar *output = (uchar*)malloc(sizeof(uchar) * width * height); // Output image
+
+    // Get platform and device information
+    cl_platform_id platform_id = NULL;
+    cl_device_id device_id = NULL;
+    cl_uint ret_num_devices;
+    cl_uint ret_num_platforms;
+
+    clGetPlatformIDs(1, &platform_id, &ret_num_platforms);
+    clGetDeviceIDs(platform_id, CL_DEVICE_TYPE_GPU, 1, &device_id, &ret_num_devices);
+
+    // Create an OpenCL context
+    cl_context context = clCreateContext(NULL, 1, &device_id, NULL, NULL, NULL);
+
+    // Create a command queue
+    cl_command_queue command_queue = clCreateCommandQueue(context, device_id, 0, NULL);
+
+    // Create memory buffers on the device for each kernel argument
+    cl_mem input_mem_obj = clCreateBuffer(context, CL_MEM_READ_ONLY, sizeof(uchar4) * width * height, NULL, NULL);
+    cl_mem output_mem_obj = clCreateBuffer(context, CL_MEM_WRITE_ONLY, sizeof(uchar) * width * height, NULL, NULL);
+
+    // Copy input data to input buffer
+    clEnqueueWriteBuffer(command_queue, input_mem_obj, CL_TRUE, 0, sizeof(uchar4) * width * height, input, 0, NULL, NULL);
+
+    // Create a program from the kernel source
+    cl_program program = clCreateProgramWithSource(context, 1, (const char **)&source_str, (const size_t *)&source_size, NULL);
+
+    // Build the program
+    clBuildProgram(program, 1, &device_id, NULL, NULL, NULL);
+
+    // Create OpenCL kernels
+    cl_kernel resize_kernel = clCreateKernel(program, "resize_image", NULL);
+    cl_kernel grayscale_kernel = clCreateKernel(program, "grayscale_image", NULL);
+    cl_kernel filter_kernel = clCreateKernel(program, "apply_filter", NULL);
+
+    // Set the arguments of each kernel
+    clSetKernelArg(resize_kernel, 0, sizeof(cl_mem), (void *)&input_mem_obj);
+    clSetKernelArg(resize_kernel, 1, sizeof(cl_mem), (void *)&output_mem_obj);
+
+    clSetKernelArg(grayscale_kernel, 0, sizeof(cl_mem), (void *)&input_mem_obj);
+    clSetKernelArg(grayscale_kernel, 1, sizeof(cl_mem), (void *)&output_mem_obj);
+
+    clSetKernelArg(filter_kernel, 0, sizeof(cl_mem), (void *)&input_mem_obj);
+    clSetKernelArg(filter_kernel, 1, sizeof(cl_mem), (void *)&output_mem_obj);
+
+    // Define work-item dimensions
+    size_t global_work_size[2] = {width / 4, height / 4};
+    size_t local_work_size[2] = {1, 1};
+
+    // Execute the OpenCL kernels
+    clEnqueueNDRangeKernel(command_queue, resize_kernel, 2, NULL, global_work_size, local_work_size, 0, NULL, NULL);
+    clEnqueueNDRangeKernel(command_queue, grayscale_kernel, 2, NULL, global_work_size, local_work_size, 0, NULL, NULL);
+    clEnqueueNDRangeKernel(command_queue, filter_kernel, 2, NULL, global_work_size, local_work_size, 0, NULL, NULL);
+
+    // Read the output data from the output buffer
+    clEnqueueReadBuffer(command_queue, output_mem_obj, CL_TRUE, 0, sizeof(uchar) * width * height, output, 0, NULL, NULL);
+
+    // Clean up
+    clFlush(command_queue);
+    clFinish(command_queue);
+    clReleaseKernel(resize_kernel);
+    clReleaseKernel(grayscale_kernel);
+    clReleaseKernel(filter_kernel);
+    clReleaseProgram(program);
+    clReleaseMemObject(input_mem_obj);
+    clReleaseMemObject(output_mem_obj);
+    clReleaseCommandQueue(command_queue);
+    clReleaseContext(context);
+    free(source_str);
+    free(input);
+    free(output);
+
+    return 0;
+}
+*/
