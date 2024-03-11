@@ -92,7 +92,7 @@ int main() {
     ReadImage(inputFile, &image, &width, &height);
 
     end = clock();
-    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; 
     printf("Image width: %d \n",width);
     printf("Image height: %d \n",height);
     
@@ -102,30 +102,29 @@ int main() {
     start = clock();
     ResizeImage(image, width, height, &resizedImage, &resizedWidth, &resizedHeight);
     end = clock();
-    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; 
     printf("ResizeImage took %.0f ms to execute \n", cpu_time_used);
 
     // Converting to grayscale
     start = clock();
     GrayScaleImage(resizedImage, resizedWidth, resizedHeight, &grayImage);
     end = clock();
-    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC;
     printf("GrayScaleImage took %.0f ms to execute \n", cpu_time_used);
 
     // Applying the filter
     start = clock();
     ApplyFilter(grayImage, resizedWidth, resizedHeight, &filteredImage);
-    //ApplyGaussianFilter(grayImage, resizedWidth, resizedHeight, &filteredImage);
 
     end = clock();
-    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; /
     printf("ApplyFilter took %.0f ms to execute \n", cpu_time_used);
 
     // Writing the resulting image
     start = clock();
     WriteImage("D:/Mega/OULU/Multiprocessesor Proggramming/Projects/2. Image/image_0_bw.png", filteredImage, resizedWidth, resizedHeight);
     end = clock();
-    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; // Convert to milliseconds
+    cpu_time_used = ((double) (end - start)) * 1000.0 / CLOCKS_PER_SEC; 
     printf("WriteImage took %.0f ms to execute \n", cpu_time_used);
 
     // Cleanup
